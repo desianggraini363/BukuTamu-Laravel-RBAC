@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+
+class EnsureRole
+{
+    public function handle(Request $request, Closure $next, string $role): Response
+    {
+        // Jika belum login atau role tidak sesuai, lempar ke 403 (Sesuai diagram Anda)
+        if (!Auth::check() || Auth::user()->role !== $role) {
+            abort(403, 'Akses Ditolak');
+        }
+
+        return $next($request);
+    }
+}
